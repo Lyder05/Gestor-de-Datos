@@ -11,6 +11,7 @@ fun main() {
         println("3. Insertar videojuego")
         println("4. Actualizar videojuego")
         println("5. Eliminar videojuego")
+        println("6. Añadir videojuego a lista")
         println("0. Salir")
         print("Selecciona una opción: ")
 
@@ -127,22 +128,23 @@ fun main() {
                 }
             }
 
+            6 -> {
+                print("ID del videojuego a añadir: ")
+                val juego: Int = readln().toInt()
+                println("Numero de lista")
+                val lista: Int = readln().toInt()
+                println("Dia añadido")
+                val fecha = readln()
+
+                VideojuegoDAO.anyadirALista(lista,juego, fecha)
+
+            }
+
             0 -> println("Saliendo del programa...")
 
             else -> println("Opción no válida.")
         }
 
-    } while (opcion != 0)
-}
 
-// 1. Cierre automático con .use (Recomendado)
-fun listarConUse() {
-    ConexionBD.getConnection()?.use { conn ->
-        conn.prepareStatement("SELECT * FROM plantas").use { stmt ->
-            val rs = stmt.executeQuery()
-            while (rs.next()) {
-                println("- ${rs.getString("nombre_comun")}")
-            }
-        }
-    }
+    } while (opcion != 0)
 }

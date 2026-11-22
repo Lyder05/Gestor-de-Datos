@@ -1,6 +1,8 @@
 package DAO
 
 import Model.Videojuego
+import java.sql.Connection
+import kotlin.use
 
 object VideojuegoDAO {
 
@@ -50,10 +52,10 @@ fun insertarVideojuego(videojuego: Videojuego) {
     val sql = "insert into videojuegos(titulo, genero, anio, nota) values (?,?,?,?)"
     ConexionBD.getConnection()?.use { conn ->
         conn.prepareStatement(sql).use { stmt ->
-            stmt.setString(2, videojuego.titulo)
-            stmt.setString(3, videojuego.genero)
-            stmt.setInt(4, videojuego.anio)
-            stmt.setDouble(5, videojuego.nota)
+            stmt.setString(1, videojuego.titulo)
+            stmt.setString(2, videojuego.genero)
+            stmt.setInt(3, videojuego.anio)
+            stmt.setDouble(4, videojuego.nota)
             if (stmt.executeUpdate() > 0) {
                 println("${videojuego.titulo} insertado con éxito")
             }
@@ -98,6 +100,41 @@ fun eliminarVideojuego (id: Int) {
         }
     }
 
+}
+
+fun anyadirALista(idLista: Int, idVideojuego: Int, fecha: String){
+    val conn = ConexionBD.getConnection() ?: return
+    try {
+        conn.autoCommit = false
+
+        conn.prepareStatement("select * from videojuegos where id = ?").use { stmt ->
+            stmt.setInt(1, idVideojuego)
+            val rs = stmt.executeQuery()
+            if (!rs.next()) {
+                throw Exception("El videojuego con ID $idVideojuego no existe")
+            }
+        }
+        val sqlInsert = "insert into listas_videojuegos (id_lista, id_videojuego, fecha_añadido) values (?,?,?)"
+
+        conn.prepareStatement(sqlInsert).use { stmt ->
+            stmt.setInt(1, idLista)
+            stmt.setInt(2, idVideojuego)
+            stmt.setString(3, fecha)
+            stmt.executeUpdate()
+        }
+
+        conn.commit()
+        println("Videojuego añadido a la lista correctamente.")
+    }
+    catch (e: Exception){
+        conn.rollback()
+        println("Error en la transacción: ${e.message}")
+        println("Transacción revertida.")
+    }
+    finally {
+        conn.autoCommit = true
+        conn.close()
+    }
 }
 
 }

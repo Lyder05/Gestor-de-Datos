@@ -8,11 +8,23 @@
       <jdbc-url>jdbc:sqlite:C:\Users\Layde\Desktop\PracticaGestordeDatos\plantas.sqlite</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="videojuegos.sqlite" uuid="1c150dbd-f765-4234-9477-ceb08d29e60e">
+    <data-source source="LOCAL" name="videojuegos.sqlite" uuid="b45f7229-7418-439d-bbc7-6e8fffcb5a9a">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\Layde\Desktop\PracticaGestordeDatos\videojuegos.sqlite</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\Lyder\Desktop\Gestor de Datos\GestordeDatos\datos\videojuegos.sqlite</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="videojuegos@localhost" uuid="52c9d1a1-9f6a-4153-9bfb-ecc87b8327ee">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/videojuegos</jdbc-url>
+      <jdbc-additional-properties>
+        <property name="com.intellij.clouds.kubernetes.db.host.port" />
+        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
+        <property name="com.intellij.clouds.kubernetes.db.container.port" />
+      </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
