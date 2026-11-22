@@ -1,19 +1,37 @@
 import DAO.VideojuegoDAO
+import DAO.JugadorDAO
+import DAO.ListaVideojuegoDAO
+import DAO.ListasDAO
 import Model.Videojuego
+import Model.Jugador
+import Model.Lista
 
 fun main() {
     var opcion: Int
 
     do {
-        println("\n===== GESTOR DE VIDEOJUEGOS =====")
-        println("1. Listar videojuegos")
-        println("2. Consultar videojuego por ID")
-        println("3. Insertar videojuego")
-        println("4. Actualizar videojuego")
+        println("\n===== CATÁLOGO DE VIDEOJUEGOS =====")
+
+        println("\n--- VIDEOJUEGOS ---")
+        println("1. Ver todos los videojuegos")
+        println("2. Buscar videojuego por ID")
+        println("3. Añadir videojuego")
+        println("4. Modificar videojuego")
         println("5. Eliminar videojuego")
-        println("6. Añadir videojuego a lista")
-        println("0. Salir")
-        print("Selecciona una opción: ")
+
+        println("\n--- JUGADORES ---")
+        println("6. Crear jugador")
+        println("7. Eliminar jugador")
+
+        println("\n--- LISTAS ---")
+        println("8. Crear lista")
+        println("9. Eliminar lista")
+        println("10. Añadir videojuego a una lista")
+        println("11. Ver videojuegos de una lista")
+
+        println("\n0. Salir")
+        println("====================================")
+        print("Escoge una opción: ")
 
         opcion = readln().toIntOrNull() ?: -1
 
@@ -57,9 +75,11 @@ fun main() {
                 val anio = readln().toIntOrNull()
 
                 print("Nota: ")
-                val nota = readln().toDoubleOrNull()
+                val nota = readln().replace(',', '.').toDoubleOrNull()
 
-                if (anio != null && nota != null) {
+                if (titulo.isNotBlank() && genero.isNotBlank()
+                    && anio != null && nota != null) {
+
                     val videojuego = Videojuego(
                         titulo = titulo,
                         genero = genero,
@@ -68,7 +88,6 @@ fun main() {
                     )
 
                     VideojuegoDAO.insertarVideojuego(videojuego)
-                    println("Operación de inserción ejecutada.")
                 } else {
                     println("Datos no válidos.")
                 }
@@ -92,9 +111,11 @@ fun main() {
                         val anio = readln().toIntOrNull()
 
                         print("Nueva nota: ")
-                        val nota = readln().toDoubleOrNull()
+                        val nota = readln().replace(',', '.').toDoubleOrNull()
 
-                        if (anio != null && nota != null) {
+                        if (titulo.isNotBlank() && genero.isNotBlank()
+                            && anio != null && nota != null) {
+
                             val videojuego = Videojuego(
                                 id = id,
                                 titulo = titulo,
@@ -104,7 +125,6 @@ fun main() {
                             )
 
                             VideojuegoDAO.actualizarVideojuego(videojuego)
-                            println("Operación de actualización ejecutada.")
                         } else {
                             println("Datos no válidos.")
                         }
@@ -122,29 +142,120 @@ fun main() {
 
                 if (id != null) {
                     VideojuegoDAO.eliminarVideojuego(id)
-                    println("Operación de eliminación ejecutada.")
                 } else {
                     println("ID no válido.")
                 }
             }
 
             6 -> {
+                println("\n--- CREAR JUGADOR ---")
+
+                print("Nombre del jugador: ")
+                val nombre = readln()
+
+                print("Email del jugador: ")
+                val email = readln()
+
+                if (nombre.isNotBlank() && email.isNotBlank()) {
+                    val jugador = Jugador(0, nombre, email)
+                    JugadorDAO.insertarJugador(jugador)
+                } else {
+                    println("Los datos no pueden estar vacíos.")
+                }
+            }
+
+            7 -> {
+                println("\n--- ELIMINAR JUGADOR ---")
+
+                print("ID del jugador a eliminar: ")
+                val id = readln().toIntOrNull()
+
+                if (id != null) {
+                    JugadorDAO.eliminarJugador(id)
+                } else {
+                    println("ID no válido.")
+                }
+            }
+
+            8 -> {
+                println("\n--- CREAR LISTA ---")
+
+                print("Nombre de la lista: ")
+                val nombre = readln()
+
+                print("ID del jugador al que pertenece: ")
+                val idJugador = readln().toIntOrNull()
+
+                if (nombre.isNotBlank() && idJugador != null) {
+                    val lista = Lista(0, nombre, idJugador)
+                    ListasDAO.insertarLista(lista)
+                } else {
+                    println("Datos no válidos.")
+                }
+            }
+
+            9 -> {
+                println("\n--- ELIMINAR LISTA ---")
+
+                print("ID de la lista a eliminar: ")
+                val id = readln().toIntOrNull()
+
+                if (id != null) {
+                    ListasDAO.eliminarLista(id)
+                } else {
+                    println("ID no válido.")
+                }
+            }
+
+            10 -> {
+                println("\n--- AÑADIR VIDEOJUEGO A UNA LISTA ---")
+
                 print("ID del videojuego a añadir: ")
-                val juego: Int = readln().toInt()
-                println("Numero de lista")
-                val lista: Int = readln().toInt()
-                println("Dia añadido")
+                val idVideojuego = readln().toIntOrNull()
+
+                print("ID de la lista: ")
+                val idLista = readln().toIntOrNull()
+
+                print("Fecha de añadido: ")
                 val fecha = readln()
 
-                VideojuegoDAO.anyadirALista(lista,juego, fecha)
+                if (idVideojuego != null && idLista != null
+                    && fecha.isNotBlank()) {
 
+                    ListaVideojuegoDAO.insertar(
+                        idLista,
+                        idVideojuego,
+                        fecha
+                    )
+                } else {
+                    println("Datos no válidos.")
+                }
+            }
+
+            11 -> {
+                println("\n--- VER VIDEOJUEGOS DE UNA LISTA ---")
+
+                print("ID de la lista: ")
+                val idLista = readln().toIntOrNull()
+
+                if (idLista != null) {
+                    val videojuegos =
+                        ListaVideojuegoDAO.obtenerVideojuegosDeLista(idLista)
+
+                    if (videojuegos.isEmpty()) {
+                        println("No hay videojuegos en esta lista.")
+                    } else {
+                        videojuegos.forEach { println(it) }
+                    }
+                } else {
+                    println("ID no válido.")
+                }
             }
 
             0 -> println("Saliendo del programa...")
 
             else -> println("Opción no válida.")
         }
-
 
     } while (opcion != 0)
 }

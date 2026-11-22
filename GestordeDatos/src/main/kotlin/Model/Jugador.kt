@@ -1,4 +1,6 @@
 package Model
 
-class Jugador {
-}
+data class Jugador (
+    val idJugador: Int,
+    val nombre: String,
+    val email: String)

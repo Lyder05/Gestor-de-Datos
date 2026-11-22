@@ -1,4 +1,3 @@
-import java.io.File
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -6,7 +5,7 @@ import java.sql.SQLException
 object ConexionBD {
     private const val URL = "jdbc:postgresql://localhost:5432/videojuegos"
     private const val USER = "postgres"
-    private const val PASSWORD = "9597"
+    private const val PASSWORD = "*****"
 
     fun getConnection(): Connection? {
         return try {
@@ -17,7 +16,6 @@ object ConexionBD {
         }
     }
 
-    // Función de prueba: verificar conexión
     fun testConnection(): Boolean {
         return getConnection()?.use { conn ->
             println("Conexión establecida con éxito a videojuegos")
@@ -25,7 +23,6 @@ object ConexionBD {
         } ?: false
     }
 
-    // Cerrar conexión (para los casos en los que no se utiliza .use)
     fun closeConnection(conn: Connection?) {
         try {
             conn?.close()
